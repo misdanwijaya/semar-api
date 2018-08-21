@@ -110,7 +110,7 @@ $app->get("/cari/", function (Request $request, Response $response, $args){
     		AND tbl_arus.lat = $lat1 AND tbl_arus.lon = $lon1
     		AND tbl_suhu_udara.lat = $lat1 AND tbl_suhu_udara.lon = $lon1
     		AND tbl_curah_hujan.lat = $lat1 AND tbl_curah_hujan.lon = $lon1   
-    		LIMIT 1";
+    		GROUP BY tbl_angin.id_angin, tbl_arus.id_arus, tbl_curah_hujan.id_curah_hujan, tbl_suhu_udara.id_suhu_udara";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([":id" => $id]);
     $result = $stmt->fetchAll();
@@ -118,17 +118,6 @@ $app->get("/cari/", function (Request $request, Response $response, $args){
 });
 
 //------------------------------------------------------------------------------------------------
-//contoh
-$app->get("/angin/cari-tgl/", function (Request $request, Response $response, $args){
-    $tgl1 = $request->getQueryParam("tgl");
-
-    $sql = "SELECT * FROM tbl_arus WHERE tanggal = '$tgl1' ";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([":id" => $id]);
-    $result = $stmt->fetchAll();
-    return $response->withJson(["status" => "success", "data" => $result], 200);
-});
-
 //seluruh data dengan tanggal
 $app->get("/cari/tgl/", function (Request $request, Response $response, $args){
     $tgl1 = $request->getQueryParam("tgl");
@@ -136,7 +125,7 @@ $app->get("/cari/tgl/", function (Request $request, Response $response, $args){
     $sql = "SELECT tbl_angin.nilai_angin, tbl_arus.nilai_arus, tbl_curah_hujan.nilai_curah_hujan, tbl_suhu_udara.nilai_suhu_udara
     FROM tbl_angin, tbl_arus, tbl_curah_hujan, tbl_suhu_udara 
     WHERE tbl_angin.tanggal = '$tgl1' AND tbl_arus.tanggal = '$tgl1' AND tbl_curah_hujan.tanggal = '$tgl1' AND tbl_suhu_udara.tanggal = '$tgl1'
-    ";
+    GROUP BY tbl_angin.id_angin, tbl_arus.id_arus, tbl_curah_hujan.id_curah_hujan, tbl_suhu_udara.id_suhu_udara";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([":id" => $id]);
     $result = $stmt->fetchAll();
