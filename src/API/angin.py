@@ -41,8 +41,8 @@ result = {'nilai': data_nilai,
 'tanggal': data_tgl,
 'longitude': data_longitude,
 'latitude': data_latitude,
-'detail_berkas': data_nama,
-'detail_unit': data_unit
+'detail_nama': data_nama,
+'detail_satuan': data_unit
 }
 
 # Send it to stdout (to PHP)
