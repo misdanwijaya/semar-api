@@ -132,7 +132,10 @@ $app->get("/cari/tgl/", function (Request $request, Response $response, $args){
     return $response->withJson(["status" => "success", "data" => $result], 200);
 });
 
-//cari data angin dari file nc
+
+//------------------------------------------------------------------------------------------------
+//cari dari NC
+//cari data angin
 $app->get("/cari-nc/angin/", function (Request $request, Response $response, $args){
     $cari_lat = $request->getQueryParam("lat");
     $cari_lon = $request->getQueryParam("lon");
@@ -142,14 +145,10 @@ $app->get("/cari-nc/angin/", function (Request $request, Response $response, $ar
     $data = array($cari_lat,$cari_lon,$cari_tgl);
 
     // Execute the python script with the JSON data
-    $result = shell_exec('python "/var/www/html/semar-api/src/coba.py" ' . base64_encode(json_encode($data)));
+    $result = shell_exec('python "/var/www/html/semar-api/src/API/angin.py" ' . base64_encode(json_encode($data)));
 
     // Decode the result
     $resultData = json_decode($result, true);
 
-    $whatIWant = substr($resultData, strpos($resultData, ":") + 2);
-
-    $hasil = substr($whatIWant, 0, strpos($whatIWant, '}')); 
-
-    return $response->withJson(["status" => "success", "data_angin" => $hasil], 200);
+    return $response->withJson(["status" => "success", "data_angin" => $resultData], 200);
 });
