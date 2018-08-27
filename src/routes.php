@@ -13,6 +13,8 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
     return $this->renderer->render($response, 'index.phtml', $args);
 });
 
+//
+// Parameter : angin, arus, suhu udara laut, tinggi gelombang
 //------------------------------------------------------------------------------------------------
 //cari dari NC
 //cari data angin
@@ -93,6 +95,7 @@ $app->get("/cari-nc/tinggi-gelombang/", function (Request $request, Response $re
 //------------------------------------------------------------------------------------------------
 //cari dari NC
 //dua parameter
+// angin - arus
 $app->get("/cari-nc/angin/arus/", function (Request $request, Response $response, $args){
     $cari_lat = $request->getQueryParam("lat");
     $cari_lon = $request->getQueryParam("lon");
@@ -114,6 +117,126 @@ $app->get("/cari-nc/angin/arus/", function (Request $request, Response $response
     $resultData2 = json_decode($result2, true);
 
     return $response->withJson(["status" => "success", "data_angin" => $resultData,"data_arus"=>$resultData2], 200);
+});
+
+//angin - suhu
+$app->get("/cari-nc/angin/suhu-udara-laut/", function (Request $request, Response $response, $args){
+    $cari_lat = $request->getQueryParam("lat");
+    $cari_lon = $request->getQueryParam("lon");
+    $cari_tgl = $request->getQueryParam("tgl");
+
+    // Data yang akan dipindah ke python
+    $data = array($cari_lat,$cari_lon,$cari_tgl);
+
+    //angin
+    // Execute the python script with the JSON data
+    $result = shell_exec('python "/var/www/html/semar-api/src/API/angin.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData = json_decode($result, true);
+
+    //arus
+    // Execute the python script with the JSON data
+    $result2 = shell_exec('python "/var/www/html/semar-api/src/API/suhu_udara_laut.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData2 = json_decode($result2, true);
+
+    return $response->withJson(["status" => "success", "data_angin" => $resultData,"data_suhu_udara_laut"=>$resultData2], 200);
+});
+
+//angin - tinggi gelombang
+$app->get("/cari-nc/angin/tinggi-gelombang/", function (Request $request, Response $response, $args){
+    $cari_lat = $request->getQueryParam("lat");
+    $cari_lon = $request->getQueryParam("lon");
+    $cari_tgl = $request->getQueryParam("tgl");
+
+    // Data yang akan dipindah ke python
+    $data = array($cari_lat,$cari_lon,$cari_tgl);
+
+    //angin
+    // Execute the python script with the JSON data
+    $result = shell_exec('python "/var/www/html/semar-api/src/API/angin.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData = json_decode($result, true);
+
+    //arus
+    // Execute the python script with the JSON data
+    $result2 = shell_exec('python "/var/www/html/semar-api/src/API/tinggi_gelombang.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData2 = json_decode($result2, true);
+
+    return $response->withJson(["status" => "success", "data_angin" => $resultData,"data_tinggi_gelombang"=>$resultData2], 200);
+});
+
+//arus - suhu
+$app->get("/cari-nc/arus/suhu-udara-laut/", function (Request $request, Response $response, $args){
+    $cari_lat = $request->getQueryParam("lat");
+    $cari_lon = $request->getQueryParam("lon");
+    $cari_tgl = $request->getQueryParam("tgl");
+
+    // Data yang akan dipindah ke python
+    $data = array($cari_lat,$cari_lon,$cari_tgl);
+
+    //angin
+    // Execute the python script with the JSON data
+    $result = shell_exec('python "/var/www/html/semar-api/src/API/arus.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData = json_decode($result, true);
+
+    //arus
+    // Execute the python script with the JSON data
+    $result2 = shell_exec('python "/var/www/html/semar-api/src/API/suhu_udara_laut.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData2 = json_decode($result2, true);
+
+    return $response->withJson(["status" => "success", "data_arus" => $resultData,"data_suhu_udara_laut"=>$resultData2], 200);
+});
+
+//arus - tinggi
+$app->get("/cari-nc/arus/tinggi-gelombang/", function (Request $request, Response $response, $args){
+    $cari_lat = $request->getQueryParam("lat");
+    $cari_lon = $request->getQueryParam("lon");
+    $cari_tgl = $request->getQueryParam("tgl");
+
+    // Data yang akan dipindah ke python
+    $data = array($cari_lat,$cari_lon,$cari_tgl);
+
+    //angin
+    // Execute the python script with the JSON data
+    $result = shell_exec('python "/var/www/html/semar-api/src/API/arus.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData = json_decode($result, true);
+
+    //arus
+    // Execute the python script with the JSON data
+    $result2 = shell_exec('python "/var/www/html/semar-api/src/API/tinggi_gelombang.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData2 = json_decode($result2, true);
+
+    return $response->withJson(["status" => "success", "data_arus" => $resultData,"data_tinggi_gelombang"=>$resultData2], 200);
+});
+
+//suhu - tinggi
+$app->get("/cari-nc/suhu-udara-laut/tinggi-gelombang/", function (Request $request, Response $response, $args){
+    $cari_lat = $request->getQueryParam("lat");
+    $cari_lon = $request->getQueryParam("lon");
+    $cari_tgl = $request->getQueryParam("tgl");
+
+    // Data yang akan dipindah ke python
+    $data = array($cari_lat,$cari_lon,$cari_tgl);
+
+    //angin
+    // Execute the python script with the JSON data
+    $result = shell_exec('python "/var/www/html/semar-api/src/API/suhu_udara_laut.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData = json_decode($result, true);
+
+    //arus
+    // Execute the python script with the JSON data
+    $result2 = shell_exec('python "/var/www/html/semar-api/src/API/tinggi_gelombang.py" ' . base64_encode(json_encode($data)));
+    // Decode the result
+    $resultData2 = json_decode($result2, true);
+
+    return $response->withJson(["status" => "success", "data_suhu_udara_laut" => $resultData,"data_tinggi_gelombang"=>$resultData2], 200);
 });
 
 //------------------------------------------------------------------------------------------------
